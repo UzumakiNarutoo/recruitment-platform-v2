@@ -8,6 +8,17 @@ export const getPost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -25,6 +36,9 @@ export const listPosts = /* GraphQL */ `
         recruiter
         content
         status
+        applications {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -32,30 +46,51 @@ export const listPosts = /* GraphQL */ `
     }
   }
 `;
-export const getPrivateNote = /* GraphQL */ `
-  query GetPrivateNote($id: ID!) {
-    getPrivateNote(id: $id) {
+export const getApplication = /* GraphQL */ `
+  query GetApplication($id: ID!) {
+    getApplication(id: $id) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;
-export const listPrivateNotes = /* GraphQL */ `
-  query ListPrivateNotes(
-    $filter: ModelPrivateNoteFilterInput
+export const listApplications = /* GraphQL */ `
+  query ListApplications(
+    $filter: ModelApplicationFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPrivateNotes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listApplications(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        content
+        candidate
+        resume
+        post {
+          id
+          recruiter
+          content
+          status
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
-        owner
+        postApplicationsId
       }
       nextToken
     }

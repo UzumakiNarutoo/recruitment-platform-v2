@@ -8,6 +8,17 @@ export const onCreatePost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -20,6 +31,17 @@ export const onUpdatePost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -32,41 +54,88 @@ export const onDeletePost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreatePrivateNote = /* GraphQL */ `
-  subscription OnCreatePrivateNote($owner: String) {
-    onCreatePrivateNote(owner: $owner) {
+export const onCreateApplication = /* GraphQL */ `
+  subscription OnCreateApplication($candidate: String) {
+    onCreateApplication(candidate: $candidate) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;
-export const onUpdatePrivateNote = /* GraphQL */ `
-  subscription OnUpdatePrivateNote($owner: String) {
-    onUpdatePrivateNote(owner: $owner) {
+export const onUpdateApplication = /* GraphQL */ `
+  subscription OnUpdateApplication($candidate: String) {
+    onUpdateApplication(candidate: $candidate) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;
-export const onDeletePrivateNote = /* GraphQL */ `
-  subscription OnDeletePrivateNote($owner: String) {
-    onDeletePrivateNote(owner: $owner) {
+export const onDeleteApplication = /* GraphQL */ `
+  subscription OnDeleteApplication($candidate: String) {
+    onDeleteApplication(candidate: $candidate) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;

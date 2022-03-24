@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Authenticator } from '@aws-amplify/ui-react'
-import { API } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 import { listPosts } from './graphql/queries';
 import { createPost as createPostMutation, deletePost as deletePostMutation } from './graphql/mutations';
-
 
 const initialFormState = { 
   content: '' 
@@ -23,6 +22,13 @@ function App() {
     setPosts(apiData.data.listPosts.items);
   }
 
+  {/*
+  async function fetchApplications() {
+    const apiData = await API.graphql({ query: listApplications });
+    setPosts(apiData.data.listApplications.items);
+  }
+*/}
+
   async function createPost() {
     if (!formData.content) return;
     await API.graphql({ query: createPostMutation, variables: { input: formData } });
@@ -34,6 +40,14 @@ function App() {
     const newPostsArray = posts.filter(post => post.id !== id);
     setPosts(newPostsArray);
     await API.graphql({ query: deletePostMutation, variables: { input: { id } }});
+  }
+
+  async function onChange(e) {
+    if (!e.target.files[0]) return
+    const file = e.target.files[0];
+    setFormData({ ...formData, image: file.name });
+    await Storage.put(file.name, file);
+    fetchPosts();
   }
 
   return (
@@ -50,6 +64,7 @@ function App() {
                   value={formData.name}
                 />
                 <button onClick={createPost}>Create Post</button>
+
                 <div style={{marginBottom: 30}}>
                   {
                     posts.map(post => (
@@ -62,6 +77,8 @@ function App() {
                     ))
                   }
                 </div>
+
+
               </div>
             )}
         </Authenticator>

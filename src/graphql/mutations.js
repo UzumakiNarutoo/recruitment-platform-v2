@@ -11,6 +11,17 @@ export const createPost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -26,6 +37,17 @@ export const updatePost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -41,50 +63,97 @@ export const deletePost = /* GraphQL */ `
       recruiter
       content
       status
+      applications {
+        items {
+          id
+          candidate
+          resume
+          createdAt
+          updatedAt
+          postApplicationsId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const createPrivateNote = /* GraphQL */ `
-  mutation CreatePrivateNote(
-    $input: CreatePrivateNoteInput!
-    $condition: ModelPrivateNoteConditionInput
+export const createApplication = /* GraphQL */ `
+  mutation CreateApplication(
+    $input: CreateApplicationInput!
+    $condition: ModelApplicationConditionInput
   ) {
-    createPrivateNote(input: $input, condition: $condition) {
+    createApplication(input: $input, condition: $condition) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;
-export const updatePrivateNote = /* GraphQL */ `
-  mutation UpdatePrivateNote(
-    $input: UpdatePrivateNoteInput!
-    $condition: ModelPrivateNoteConditionInput
+export const updateApplication = /* GraphQL */ `
+  mutation UpdateApplication(
+    $input: UpdateApplicationInput!
+    $condition: ModelApplicationConditionInput
   ) {
-    updatePrivateNote(input: $input, condition: $condition) {
+    updateApplication(input: $input, condition: $condition) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;
-export const deletePrivateNote = /* GraphQL */ `
-  mutation DeletePrivateNote(
-    $input: DeletePrivateNoteInput!
-    $condition: ModelPrivateNoteConditionInput
+export const deleteApplication = /* GraphQL */ `
+  mutation DeleteApplication(
+    $input: DeleteApplicationInput!
+    $condition: ModelApplicationConditionInput
   ) {
-    deletePrivateNote(input: $input, condition: $condition) {
+    deleteApplication(input: $input, condition: $condition) {
       id
-      content
+      candidate
+      resume
+      post {
+        id
+        recruiter
+        content
+        status
+        applications {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
-      owner
+      postApplicationsId
     }
   }
 `;

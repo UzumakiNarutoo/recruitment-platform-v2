@@ -16,9 +16,19 @@ type Post
   recruiter: String
   content: String!
   status: String
+  applications: [Application] @hasMany
 }
 
-type PrivateNote @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  content: String!
-}
+type Application
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField:"candidate", provider: userPools, operations:[create, read] }
+    ]
+  )
+  {
+    id: ID
+    candidate: String
+    resume: String
+    post: Post @belongsTo(fields:["id"])
+  }
