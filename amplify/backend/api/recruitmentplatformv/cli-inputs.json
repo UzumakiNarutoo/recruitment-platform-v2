@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "recruitmentplatformv",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/home/ahmedelatar/Naruto/GitArea/recruitment-platform-v2/amplify/backend/api/recruitmentplatformv/schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authrecruitmentplatformvc83b05c1"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-03-24T02:15:04.104Z",
+        "keyDescription": ""
+      }
+    ],
+    "conflictResolution": {}
+  }
+}

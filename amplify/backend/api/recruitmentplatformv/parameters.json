@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "recruitmentplatformv",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authrecruitmentplatformvc83b05c1",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
