@@ -30,5 +30,5 @@ type Application
     id: ID
     candidate: String
     resume: String
-    post: Post @belongsTo(fields:["id"])
+    post: Post @belongsTo
   }
