@@ -4,18 +4,21 @@
 export const onCreatePost = /* GraphQL */ `
   subscription OnCreatePost($recruiter: String) {
     onCreatePost(recruiter: $recruiter) {
+      type
       id
       recruiter
       content
-      status
+      timestamp
       applications {
         items {
+          type
           id
           candidate
           resume
+          timestamp
+          postApplicationsId
           createdAt
           updatedAt
-          postApplicationsId
         }
         nextToken
       }
@@ -27,18 +30,21 @@ export const onCreatePost = /* GraphQL */ `
 export const onUpdatePost = /* GraphQL */ `
   subscription OnUpdatePost($recruiter: String) {
     onUpdatePost(recruiter: $recruiter) {
+      type
       id
       recruiter
       content
-      status
+      timestamp
       applications {
         items {
+          type
           id
           candidate
           resume
+          timestamp
+          postApplicationsId
           createdAt
           updatedAt
-          postApplicationsId
         }
         nextToken
       }
@@ -50,18 +56,21 @@ export const onUpdatePost = /* GraphQL */ `
 export const onDeletePost = /* GraphQL */ `
   subscription OnDeletePost($recruiter: String) {
     onDeletePost(recruiter: $recruiter) {
+      type
       id
       recruiter
       content
-      status
+      timestamp
       applications {
         items {
+          type
           id
           candidate
           resume
+          timestamp
+          postApplicationsId
           createdAt
           updatedAt
-          postApplicationsId
         }
         nextToken
       }
@@ -73,69 +82,78 @@ export const onDeletePost = /* GraphQL */ `
 export const onCreateApplication = /* GraphQL */ `
   subscription OnCreateApplication($candidate: String) {
     onCreateApplication(candidate: $candidate) {
+      type
       id
       candidate
       resume
+      timestamp
       post {
+        type
         id
         recruiter
         content
-        status
+        timestamp
         applications {
           nextToken
         }
         createdAt
         updatedAt
       }
+      postApplicationsId
       createdAt
       updatedAt
-      postApplicationsId
     }
   }
 `;
 export const onUpdateApplication = /* GraphQL */ `
   subscription OnUpdateApplication($candidate: String) {
     onUpdateApplication(candidate: $candidate) {
+      type
       id
       candidate
       resume
+      timestamp
       post {
+        type
         id
         recruiter
         content
-        status
+        timestamp
         applications {
           nextToken
         }
         createdAt
         updatedAt
       }
+      postApplicationsId
       createdAt
       updatedAt
-      postApplicationsId
     }
   }
 `;
 export const onDeleteApplication = /* GraphQL */ `
   subscription OnDeleteApplication($candidate: String) {
     onDeleteApplication(candidate: $candidate) {
+      type
       id
       candidate
       resume
+      timestamp
       post {
+        type
         id
         recruiter
         content
-        status
+        timestamp
         applications {
           nextToken
         }
         createdAt
         updatedAt
       }
+      postApplicationsId
       createdAt
       updatedAt
-      postApplicationsId
     }
   }
 `;

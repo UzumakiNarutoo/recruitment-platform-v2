@@ -1,151 +1,108 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
-import { Authenticator } from '@aws-amplify/ui-react'
-import { API, Storage } from 'aws-amplify';
-import { listPosts, listApplications } from './graphql/queries';
-import { 
-  createPost as createPostMutation, 
-  deletePost as deletePostMutation, 
-  createApplication as createApplicationMutation,
-} from './graphql/mutations';
 
-const post_initialFormState = { 
-  content: '' 
-}
-const application_initialFormState = { 
-  resume: '' ,
-}
+import { Authenticator } from '@aws-amplify/ui-react'
+import '@aws-amplify/ui-react/styles.css';
+
+import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import {
+  HashRouter,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+
+import AllPosts from './components/Posts/AllPosts';
+import PostsBySpecifiedUser from './components/Posts/PostsBySpecifiedUser';
+import ApplicationsBySpecifiedUser from './components/Applications/ApplicationsBySpecifiedUser';
+import CreatePost from './components/Posts/CreatePost';
+import CreateApplication from './components/Applications/CreateApplication'
+import ApplicationsBySpecifiedPost from './components/Applications/ApplicationsBySpecifiedPost'
+
+const drawerWidth = 240;
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#1EA1F2',
+      contrastText: "#fff",
+    },
+    background: {
+      default: '#15202B',
+      paper: '#15202B',
+    },
+    divider: '#37444C',
+  },
+  overrides: {
+    MuiButton: {
+      color: 'white',
+    },
+  },
+  typography: {
+    fontFamily: [
+      'Arial', 
+    ].join(','),
+  },
+  status: {
+    danger: 'orange',
+  },
+});
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    height: '100%',
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  appBar: {
+    marginLeft: drawerWidth,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3),
+  },
+}));
+
 
 function App() {
-  const [posts, setPosts] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [post_formData, setPost_formData] = useState(post_initialFormState);
-  const [application_formData, setApplication_formData] = useState(application_initialFormState);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  async function fetchPosts() {
-    const apiData = await API.graphql({ query: listPosts });
-    setPosts(apiData.data.listPosts.items);
-  }
-  async function fetchApplications() {
-    const apiData = await API.graphql({ query: listApplications });
-    const applicationsFromAPI = apiData.data.listApplications.items;
-    await Promise.all(applicationsFromAPI.map(async application => {
-      if (application.resume) {
-        const resume = await Storage.get(application.resume);
-        application.resume = resume;
-      }
-      return application;
-    }))
-    setApplications(apiData.data.listApplications.items);
-  }
-
-  async function createPost() {
-    if (!post_formData.content) return;
-    await API.graphql({ query: createPostMutation, variables: { input: post_formData } });
-    setPosts([ ...posts, post_formData ]);
-    setPost_formData(post_initialFormState);
-  }
-
-  async function createApplication(post) {
-    if (!application_formData.resume) return;
-    console.log('create app');
-    console.log(application_formData);
-    console.log(application_formData);
-    await API.graphql({ query: createApplicationMutation, variables: { input: {
-      postApplicationsId: post.id,
-      resume: application_formData.resume
-    } } });
-    console.log('init');
-    console.log(application_formData);
-    const resume = await Storage.get(application_formData.resume);
-    application_formData.resume = resume;
-    console.log('here');
-    console.log(application_formData);
-    setApplications([ ...applications, application_formData ]);
-    setApplication_formData(application_initialFormState);
-    console.log('done');
-  }
-
-  async function deletePost({ id }) {
-    const newPostsArray = posts.filter(post => post.id !== id);
-    setPosts(newPostsArray);
-    await API.graphql({ query: deletePostMutation, variables: { input: { id } }});
-  }
-
-  async function onChange(e) {
-    if (!e.target.files[0]) return
-    const file = e.target.files[0];
-    setApplication_formData({ ...application_formData, resume: file.name });
-    await Storage.put(file.name, file);
-    fetchApplications();
-  }
+  
+  const classes = useStyles();
 
   return (
-    <div className="App">
+    <div className={classes.root}>
       <Authenticator>
-            {({ signOut, user }) => (
-              <div className="Auth">
-                  Hi {user.username}
-                  <button onClick={signOut}>Sign out</button>
-
-                  <input
-                  onChange={e => setPost_formData({ ...post_formData, 'content': e.target.value})}
-                  placeholder="content"
-                  value={post_formData.name}
-                />
-                <button onClick={createPost}>Create Post</button>
-
-                <div style={{marginBottom: 30}}>
-                  {
-                    posts.map(post => (
-                      <div key={post.id}>
-                        <h2>{post.recruiter}</h2>
-                        <p>{post.id}</p>
-                        <p>{post.content}</p>
-                        <input
-                          type="file"
-                          onChange={onChange}
-                        />
-                        <button onClick={() => createApplication(post)}>Apply</button>
-                        <button onClick={() => deletePost(post)}>Delete Post</button>
-                      </div>
-                    ))
-                  }
-                </div>
-
-                <div style={{marginBottom: 30}}>
-                  {
-                    applications.map(application => (
-                      <div key={application.id}>
-                        <h2>{application.candidate}</h2>
-                        <p>{application.resume}</p>
-                        <div style={{marginBottom: 30}}>
-                        {
-                          posts.filter(post => post.id === application.postApplicationsId).map(post => (
-                            <div key={post.id}>
-                              <p>{post.recruiter}</p>
-                              <p>{post.content}</p>
-                            </div>
-                          ))
-                        }
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
-
-
-              </div>
-            )}
-        </Authenticator>
+      {({ signOut, user }) => (
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <HashRouter>
+            <Switch>
+              <Route exact path='/' component={AllPosts} />
+              <Route exact path='/create-job-post' component={CreatePost} />
+              <Route exact path='/global-timeline' component={AllPosts} />
+              <Route exact path='/posts-:userId' component={PostsBySpecifiedUser}/>
+              <Route exact path='/applications-:userId' component={ApplicationsBySpecifiedUser}/>
+              <Route exact path='/apply-:userId-:postId' component={CreateApplication}/>
+              <Route exact path='/received-applications-:userId-:postId' component={ApplicationsBySpecifiedPost}/>
+              <Redirect path="*" to="/" />
+            </Switch>
+          </HashRouter>
+        </ThemeProvider>
+      )}
+      </Authenticator>
     </div>
   );
 }

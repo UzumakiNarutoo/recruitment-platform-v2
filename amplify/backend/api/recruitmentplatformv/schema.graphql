@@ -9,26 +9,33 @@ type Post
       { allow: owner, ownerField:"recruiter", provider: userPools, operations:[create, update, read, delete] }
       { allow: private, provider: userPools, operations:[read]}
       { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
-      { allow: groups, groups: ["Candidates"], operations: [read] }
     ]
-  ) {
-  id: ID
-  recruiter: String
-  content: String!
-  status: String
-  applications: [Application] @hasMany
-}
+  )
+  {
+      # type = 'post'
+    type: String! @index(name: "SortByTimestamp", sortKeyFields: ["timestamp"], queryField: "listPostsSortedByTimestamp")
+    id: ID @index(name: "GetSpecificPost", sortKeyFields: ["timestamp"], queryField: "GetSpecificPostById")
+    recruiter: String @index(name: "BySpecificOwner", sortKeyFields: ["timestamp"], queryField: "listPostsBySpecificOwner")
+    content: String!
+    timestamp: Int!
+    applications: [Application] @hasMany
+  }
 
 type Application
   @model
   @auth(
     rules: [
       { allow: owner, ownerField:"candidate", provider: userPools, operations:[create, read] }
+      { allow: private, provider: userPools, operations:[read]}
     ]
   )
   {
+      # type = 'application'
+    type: String!
     id: ID
-    candidate: String
+    candidate: String @index(name: "BySpecificCandidate", sortKeyFields: ["timestamp"], queryField: "listApplicationsBySpecificCandidate")
     resume: String
+    timestamp: Int!
     post: Post @belongsTo
+    postApplicationsId: ID @index(name: "BySpecificPost", sortKeyFields: ["timestamp"], queryField: "listApplicationsBySpecificPost")
   }

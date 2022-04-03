@@ -7,18 +7,21 @@ export const createPost = /* GraphQL */ `
     $condition: ModelPostConditionInput
   ) {
     createPost(input: $input, condition: $condition) {
+      type
       id
       recruiter
       content
-      status
+      timestamp
       applications {
         items {
+          type
           id
           candidate
           resume
+          timestamp
+          postApplicationsId
           createdAt
           updatedAt
-          postApplicationsId
         }
         nextToken
       }
@@ -33,18 +36,21 @@ export const updatePost = /* GraphQL */ `
     $condition: ModelPostConditionInput
   ) {
     updatePost(input: $input, condition: $condition) {
+      type
       id
       recruiter
       content
-      status
+      timestamp
       applications {
         items {
+          type
           id
           candidate
           resume
+          timestamp
+          postApplicationsId
           createdAt
           updatedAt
-          postApplicationsId
         }
         nextToken
       }
@@ -59,18 +65,21 @@ export const deletePost = /* GraphQL */ `
     $condition: ModelPostConditionInput
   ) {
     deletePost(input: $input, condition: $condition) {
+      type
       id
       recruiter
       content
-      status
+      timestamp
       applications {
         items {
+          type
           id
           candidate
           resume
+          timestamp
+          postApplicationsId
           createdAt
           updatedAt
-          postApplicationsId
         }
         nextToken
       }
@@ -85,23 +94,26 @@ export const createApplication = /* GraphQL */ `
     $condition: ModelApplicationConditionInput
   ) {
     createApplication(input: $input, condition: $condition) {
+      type
       id
       candidate
       resume
+      timestamp
       post {
+        type
         id
         recruiter
         content
-        status
+        timestamp
         applications {
           nextToken
         }
         createdAt
         updatedAt
       }
+      postApplicationsId
       createdAt
       updatedAt
-      postApplicationsId
     }
   }
 `;
@@ -111,23 +123,26 @@ export const updateApplication = /* GraphQL */ `
     $condition: ModelApplicationConditionInput
   ) {
     updateApplication(input: $input, condition: $condition) {
+      type
       id
       candidate
       resume
+      timestamp
       post {
+        type
         id
         recruiter
         content
-        status
+        timestamp
         applications {
           nextToken
         }
         createdAt
         updatedAt
       }
+      postApplicationsId
       createdAt
       updatedAt
-      postApplicationsId
     }
   }
 `;
@@ -137,23 +152,26 @@ export const deleteApplication = /* GraphQL */ `
     $condition: ModelApplicationConditionInput
   ) {
     deleteApplication(input: $input, condition: $condition) {
+      type
       id
       candidate
       resume
+      timestamp
       post {
+        type
         id
         recruiter
         content
-        status
+        timestamp
         applications {
           nextToken
         }
         createdAt
         updatedAt
       }
+      postApplicationsId
       createdAt
       updatedAt
-      postApplicationsId
     }
   }
 `;
